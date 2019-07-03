@@ -1,15 +1,30 @@
-import Vue from 'vue'
-import DatepickerComponent from './components/Datepicker.js'
-// import moment from 'moment'
+const Vue = require('vue').default
 
-var Datepicker = Vue.extend({
+/* eslint-disable spaced-comment */
+/* eslint-disable indent */
+/* eslint-disable no-tabs */
+/* eslint-disable no-new */
+/* eslint-disable eol-last */
 
+//créer le component
+const Datepicker = Vue.extend({
+	//propriétés
+	props: {
+		value: { type: String, required: true },
+		format: { type: String, default: 'YYYY-MM-DD' }
+	},
+	data: function () {
+		return {
+			date: 'Salut les gens'
+		}
+	},
+	template: '<input type="text" :value="value">'
 })
 
-/* eslint-disable no-new */ /* eslint-disable no-tabs */ /* eslint-disable indent */ /* eslint-disable eol-last */
 new Vue({
-	el: 'body',
+	//propriétés
+	el: '.wrap',
 	components: {
-		datepicker: DatepickerComponent
+		datepicker: Datepicker
 	}
 })
