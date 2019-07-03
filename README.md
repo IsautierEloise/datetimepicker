@@ -8,7 +8,7 @@
 # install dependencies
 npm install
 
-npm install moment
+npm install --save moment
 ```
 
 ### What
