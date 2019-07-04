@@ -24,29 +24,34 @@
 	const defaultFormat = 'YYYY-MM-DD';
 
 	//Component
-	export default{
+	export default
+	{
 		//components
-		components: {
+		components: 
+		{
 			'datepicker-calendar': DatepickerCalendarComponent
 		},
 		//properties
-		props: {
+		props: 
+		{
 			value: { type: String, required: true },
 			format: { type: String, default: defaultFormat },
 			name: { type: String }
 		},
 		//recieved data
-		data: function () {
+		data () {
 			return {
 				date: moment(this.value, defaultFormat)
 			}
 		},
 		//formatting
 		computed: {
-			date_formatted: function () {
+			date_formatted () 
+			{
 				return this.date.format(this.format)
 			},
-			date_raw: function () {
+			date_raw () 
+			{
 				return this.date.format(defaultFormat)
 			}
 		}
