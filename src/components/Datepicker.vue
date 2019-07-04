@@ -1,0 +1,54 @@
+<style>
+	.calendar-wrap
+	{
+		position: relative;
+		top: 100%;
+	}
+</style>
+
+<template>	
+	<div class="calendar-wrap">
+		<input type="text" :value="date_formatted">
+		<input type="text" :name="name" :value="date_raw">
+		<datepicker-calendar :date="date"></datepicker-calendar>
+	</div>
+</template>
+
+<script>
+	//Imports
+	import moment from 'moment';
+	moment.locale('fr');
+	import DatepickerCalendarComponent from './DatepickerCalendar.vue';
+
+	//Variables
+	const defaultFormat = 'YYYY-MM-DD';
+
+	//Component
+	export default{
+		//components
+		components: {
+			'datepicker-calendar': DatepickerCalendarComponent
+		},
+		//properties
+		props: {
+			value: { type: String, required: true },
+			format: { type: String, default: defaultFormat },
+			name: { type: String }
+		},
+		//recieved data
+		data: function () {
+			return {
+				date: moment(this.value, defaultFormat)
+			}
+		},
+		//formatting
+		computed: {
+			date_formatted: function () {
+				return this.date.format(this.format)
+			},
+			date_raw: function () {
+				return this.date.format(defaultFormat)
+			}
+		}
+	};
+</script>

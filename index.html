@@ -3,11 +3,23 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>datepicker</title>
+    <link href="https://fonts.googleapis.com/css?family=Heebo&display=swap" rel="stylesheet">
+    <title>Custom datepicker</title>
   </head>
+  <style>
+    *
+    {
+      box-sizing: border-box;
+    }
+    body
+    {
+      font-family: Heebo, sans-serif;
+    }
+  </style>
   <body>
   	<div class="wrap">
-  		<datepicker value="2019-01-02" format="DD/MM/YYYY"></datepicker>
+  		<datepicker value="2019-01-02" format="DD/MM/YYYY" name="start"></datepicker>
+      <!-- <datepicker value="2019-05-02" format="dd/mm/yyyy" name="end"></datepicker> -->
   	</div>
   </body>
 </html>
