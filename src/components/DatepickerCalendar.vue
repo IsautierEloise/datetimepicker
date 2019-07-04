@@ -1,8 +1,8 @@
 <style lang="scss">
 
 	$header-height: 6rem;
-	$header-width: 16rem;
-	$weekday-size: 2rem;
+	$header-width: 24rem;
+	$weekday-size: 3rem;
 
 	$weight-thin: 200;
 	$weight-light: 300;
@@ -13,6 +13,7 @@
 	$font-3xl: 1.875rem;
 
 	$color-blue: #0075BF;
+	$color-blue-light: #3499D9;
 
 	.calendar
 	{
@@ -25,7 +26,7 @@
 	{
 		background-color: $color-blue;
 		color: #fff;
-		padding: 1rem;
+		padding: 1.5rem;
 		font-weight: $weight-light;
 		height: $header-height;
 		width: $header-width
@@ -47,25 +48,73 @@
 		font-size: $font-base;
 		line-height: $font-base;
 		color: $color-blue;
-		padding: 0 1rem
+		padding: 1.5rem;
+		display: flex;
 	}
 	.calendar-weekday
 	{
-		display: inline-block;
 		width: $weekday-size;
 		text-align: center;
 	}
 	.calendar-days
 	{
-		padding: 0 1em;
-		width: $header-width
+		padding: 0 1.5em;
+		width: $header-width;
+		display: flex;
+		flex-wrap: wrap;
 	}
 	.calendar-day
 	{
+		position: relative;
 		width: $weekday-size;
 		height: $weekday-size;
-		display: inline-block;
-		text-align: center;
+		line-height: $weekday-size;
+		cursor: pointer;
+		text-align: center
+	}
+	.calendar-day-text
+	{
+		position: relative;
+		z-index: 2;
+	}
+	.calendar-day-effect
+	{
+		position: absolute;
+		left: 0.25rem;
+		top: 0.25rem;
+		z-index: 0;
+		height: 2.5rem;
+		width: 2.5rem;
+		border-radius: 50%;
+		background-color: $color-blue-light;
+		transition: all 450ms cubic-bezier(0.14, 0.82, 0.4, 0.94);
+		transform: scale(0);
+		opacity: 0
+	}
+
+	.calendar-day:hover 
+	{
+		color: #fff
+	}
+
+
+	.calendar-day:hover .calendar-day-effect
+	{
+		transform: scale(1);
+		opacity: 0.6
+	}
+
+	.calendar-day.selected 
+	{
+		color: #fff
+	}
+
+
+	.calendar-day.selected .calendar-day-effect
+	{
+		transform: scale(1);
+		background-color: $color-blue;
+		opacity: 1
 	}
 </style>
 
@@ -85,10 +134,11 @@
 			</div>
 		</div>
 		<div class="calendar-days">
-			<div class="calendar-day" v-bind:style="{ width: (month.getWeekBeginning()*2) + 'rem'}">
+			<div class="calendar-day" v-bind:style="{ width: ((month.getWeekBeginning()*2) - 1) + 'rem'}">
 			</div>
-			<div class="calendar-day" v-for="day in month.getMonthDays()">
-				{{day.format('D')}}
+			<div class="calendar-day" v-on:click="selectDate(day)" v-for="day in month.getMonthDays()" :class="{selected: isSelected(day)}">
+				<span class="calendar-day-text">{{day.format('D')}}</span>
+				<span class="calendar-day-effect"></span>
 			</div>
 		</div>
 	</div>
@@ -113,11 +163,24 @@
 		{
 			return {
 				weekdays: ['L', 'M', 'M', 'J', 'V', 'S', 'D'],
-				month: new Month(this.date.month(), this.date.year())
+				month: new Month(this.date.month(), this.date.year()),
+				date_selected: this.date
+			}
+		},
+		methods:
+		{
+			isSelected: function (day)
+			{
+				return this.date.unix() === day.unix()
+			},
+			selectDate: function (date_selected)
+			{
+				this.date_selected = date_selected.clone()
 			}
 		},
 		computed: 
 		{
+
 			year ()
 			{
 				return this.date.format('YYYY')

@@ -10,7 +10,7 @@
 	<div class="calendar-wrap">
 		<input type="text" :value="date_formatted">
 		<input type="text" :name="name" :value="date_raw">
-		<datepicker-calendar :date="date"></datepicker-calendar>
+		<datepicker-calendar :date.sync="date"></datepicker-calendar>
 	</div>
 </template>
 
