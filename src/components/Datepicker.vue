@@ -8,9 +8,9 @@
 
 <template>	
 	<div class="calendar-wrap">
-		<input type="text" :value="date_formatted">
-		<input type="text" :name="name" :value="date_raw">
-		<datepicker-calendar :date.sync="date"></datepicker-calendar>
+		<input type="text" :value="date_formatted" @click="showCalendar">
+		<input type="hidden" :name="name" :value="date_raw">
+		<datepicker-calendar :displayed="isVisible" :date.sync="date" @change="getDate" @cancel="hideCalendar"></datepicker-calendar>
 	</div>
 </template>
 
@@ -26,26 +26,43 @@
 	//Component
 	export default
 	{
-		//components
 		components: 
 		{
 			'datepicker-calendar': DatepickerCalendarComponent
 		},
-		//properties
 		props: 
 		{
 			value: { type: String, required: true },
 			format: { type: String, default: defaultFormat },
-			name: { type: String }
+			name: { type: String },
 		},
-		//recieved data
-		data () {
+		data () 
+		{
 			return {
-				date: moment(this.value, defaultFormat)
+				isVisible: false,
+				date: moment(this.value, defaultFormat),
 			}
 		},
-		//formatting
-		computed: {
+		methods:
+		{
+			getDate: function (date)
+			{
+				this.date=date;
+				this.hideCalendar()
+			},
+			showCalendar ()
+			{
+				this.isVisible=true;
+				setTimeout(() => document.addEventListener('click', this.hideCalendar), 0)
+			},
+			hideCalendar ()
+			{
+				this.isVisible=false;
+				document.removeEventListener('click', this.hideCalendar)
+			}
+		},
+		computed: 
+		{
 			date_formatted () 
 			{
 				return this.date.format(this.format)
