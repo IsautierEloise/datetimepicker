@@ -11,7 +11,7 @@
 		<input type="text" :value="date_formatted" @click="showCalendar">
 		<input type="hidden" :name="name" :value="date_raw">
 		<datepicker-calendar :displayed="isVisible" :date.sync="date" @change="getDate" @cancel="hideCalendar"></datepicker-calendar>
-		<input type="text" :value='date'>
+		<input type="text" :value='hour_formatted'>
 		<timepicker-input :date.sync="date" name="hour-start"></timepicker-input>
 	</div>
 </template>
@@ -78,12 +78,12 @@
 			},
 			hour_formatted ()
 			{
-				return this.date.format('HH:mm')
+				return moment(this.value).format('HH:mm')
 			}
 		},
 		mounted()
 		{
-			console.log(this.value, 'HH:mm')
+			console.log('test')
 		}
 	};
 </script>
