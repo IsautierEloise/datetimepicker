@@ -11,6 +11,8 @@
 		<input type="text" :value="date_formatted" @click="showCalendar">
 		<input type="hidden" :name="name" :value="date_raw">
 		<datepicker-calendar :displayed="isVisible" :date.sync="date" @change="getDate" @cancel="hideCalendar"></datepicker-calendar>
+		<input type="text" :value='date'>
+		<timepicker-input :date.sync="date" name="hour-start"></timepicker-input>
 	</div>
 </template>
 
@@ -19,6 +21,7 @@
 	import moment from 'moment';
 	moment.locale('fr');
 	import DatepickerCalendarComponent from './DatepickerCalendar.vue';
+	import TimepickerInput from './TimepickerInput.vue';
 
 	//Variables
 	const defaultFormat = 'YYYY-MM-DD';
@@ -28,7 +31,8 @@
 	{
 		components: 
 		{
-			'datepicker-calendar': DatepickerCalendarComponent
+			'datepicker-calendar': DatepickerCalendarComponent,
+			'timepicker-input': TimepickerInput,
 		},
 		props: 
 		{
@@ -41,6 +45,7 @@
 			return {
 				isVisible: false,
 				date: moment(this.value, defaultFormat),
+				hour: moment(this.date, 'HH:mm')
 			}
 		},
 		methods:
@@ -70,7 +75,15 @@
 			date_raw () 
 			{
 				return this.date.format(defaultFormat)
+			},
+			hour_formatted ()
+			{
+				return this.date.format('HH:mm')
 			}
+		},
+		mounted()
+		{
+			console.log(this.value, 'HH:mm')
 		}
 	};
 </script>

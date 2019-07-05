@@ -228,9 +228,6 @@
 				<button @click="cancel" class="cancel">Annuler</button>
 				<button @click="submit">Choisir</button>
 			</div>
-			<div class="calendar-timepicker">
-				<div class="hour"></div>
-			</div>
 		</div>
 	</transition>
 </template>
@@ -317,7 +314,7 @@
 		},
 		mounted ()
 		{
-			console.log('displayed', this.displayed)
+			console.log('displayed', this.displayed);
 		}
 	};
 </script>
