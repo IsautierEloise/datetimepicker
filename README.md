@@ -6,9 +6,9 @@
 
 ``` bash
 # install dependencies
-npm install
-
-npm install --save moment
+npm i
+npm i -g vue-cli
+npm i --save moment
 ```
 
 ### What
