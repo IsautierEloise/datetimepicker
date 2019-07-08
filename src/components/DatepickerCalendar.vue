@@ -180,7 +180,14 @@
 			opacity: 0;
 		}
 	}
-	.calendar-timepicker
+	.options
+	{
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: ceneter;
+	}
+	timepicker
 	{
 		position: relative;
 		border-top: 1px solid $color-blue-light;
@@ -191,7 +198,7 @@
 
 <template>
 	<transition name="slide">
-		<div class="calendar" v-show="displayed" @click.stop>
+		<div class="calendar" v-show="displayedCalendar" @click.stop>
 			<div class="calendar-header">
 				<div class="calendar-year">
 					{{year}}
@@ -202,7 +209,7 @@
 			</div>
 			<div class="calendar-controls">
 				<button class="calendar-controls-prev" @click="prevMonth()">
-					<img src="../assets/chevron-left.svg" alt="previous">
+					<img src="../assets/chevron-left.svg" alt="next">
 				</button>
 				<div class="calendar-controls-month">
 					{{month.getFormatted()}}
@@ -224,6 +231,7 @@
 					<span class="calendar-day-effect"></span>
 				</div>
 			</div>
+			<timepicker :statut="statut" :value="value" :date.sync="date" name="hour-start" @change="changeHour()"></timepicker>
 			<div class="calendar-actions">
 				<button @click="cancel" class="cancel">Annuler</button>
 				<button @click="submit">Choisir</button>
@@ -236,6 +244,7 @@
 <script>
 
 	import Month from '../modules/month.js';
+	import Timepicker from './Timepicker.vue';
 
 	//Functions
 	String.prototype.capitalize = function() 
@@ -246,17 +255,23 @@
 	//Component
 	export default
 	{
+		components:
+		{
+			'timepicker': Timepicker,
+		},
 		props: 
 		{
 			date: {},
-			displayed: {type: Boolean, default: true},
+			displayedCalendar: {type: Boolean, default: true},
+			value: { type: String, required: true },
+			statut: { type: String }
 		},
 		data ()
 		{
 			return {
 				weekdays: ['L', 'M', 'M', 'J', 'V', 'S', 'D'],
 				month: new Month(this.date.month(), this.date.year()),
-				dateProp: this.date,
+				dateProp: this.date
 			}
 		},
 		methods:
@@ -264,6 +279,7 @@
 			isSelected: function (day)
 			{
 				return this.dateProp.unix() === day.unix();
+			
 			},
 			selectDate: function (day)
 			{
@@ -293,12 +309,17 @@
 			},
 			submit ()
 			{
-				this.$emit('change', this.dateProp)
+				this.$emit('change', this.dateProp);
+			},
+			changeHour (value)
+			{
+				console.log('change')
+				console.log(value)
 			},
 			cancel ()
 			{
 				this.$emit('cancel')
-			}
+			},
 		},
 		computed: 
 		{
@@ -314,7 +335,6 @@
 		},
 		mounted ()
 		{
-			console.log('displayed', this.displayed);
 		}
 	};
 </script>
