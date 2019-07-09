@@ -163,11 +163,13 @@
 				background-color: $color-grey
 			}
 		}
-		:first-child
+		
+		.cancel
 		{
 			color: $color-grey-dark;
 		}
-		:last-child
+		
+		.sub
 		{
 			color: $color-blue;
 		}
@@ -236,7 +238,7 @@
 			<timepicker-by-minute :hour="hour_formatted" :minute="minute_formatted" :statut="statut" :value="value" :date.sync="date" name="hour-start" @change="changeHour" v-show="byMinute"></timepicker-by-minute>
 			<div class="calendar-actions">
 				<button @click="cancel" class="cancel">Annuler</button>
-				<button @click="submit">Choisir</button>
+				<button class="sub" @click="submit">Choisir</button>
 			</div>
 		</div>
 	</transition>
@@ -287,7 +289,10 @@
 	    		minuteFocused: false,
 	    		hourProp: '',
 	    		minuteProp: '',
-	    		regex: /^[0-9]{2}$/
+	    		hourInt: 0,
+	    		minuteInt: 0,
+	    		invalidDate: false,
+	    		regex: /^[0-9]$/
 			}
 		},
 		methods:
@@ -325,7 +330,16 @@
 			},
 			submit ()
 			{
-				this.$emit('change', this.dateProp);
+				this.hourInt = parseInt(this.hourProp);
+				this.minuteInt = parseInt(this.minuteProp);
+
+				if((this.hourInt<24 && this.hourInt>0 ) && (this.minuteInt<59 && this.minuteInt>0))
+				{	
+					this.$emit('change', this.dateProp);
+				} else
+				{
+					alert('Format invalide')
+				}
 			},
 			cancel ()
 			{
@@ -336,6 +350,7 @@
 				this.hourProp = timeObj.hourProp;
 				this.minuteProp = timeObj.minuteProp;
 				
+
 				this.dateProp.minute(this.minuteProp);
 				this.dateProp.hour(this.hourProp);
 			},

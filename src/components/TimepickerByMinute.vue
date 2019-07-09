@@ -104,7 +104,7 @@
 	<div class="timepicker-wrap">
 		<div class="minute-timepicker timepicker">
 			<div class="hour">	
-				<input type="text" name="hour-input" v-model="hourInt" @focus="focusedHour" autocomplete="off" >		
+				<input type="text" name="hour-input" v-model="hourInt" @focus="focusedHour" @input="sendHour" autocomplete="off" >		
 				<div class="timepicker-controls">
 					<button class="timepicker-controls-add" @click="addHour">
 						<img src="../assets/caret-up.svg" alt="add" >
@@ -117,7 +117,7 @@
 			</div> 
 			:
 			<div class="minute">	
-				<input type="text"  name="minute-input" v-model="minuteInt" @focus="focusedMinute" autocomplete="off" >		
+				<input type="text"  name="minute-input" v-model="minuteInt" @focus="focusedMinute" @input="sendMinute" autocomplete="off" >		
 				<div class="timepicker-controls">
 					<button class="timepicker-controls-add">
 						<img src="../assets/caret-up.svg" alt="add"  @click="addQuarter">
@@ -223,7 +223,15 @@
 			{
 				this.minuteInt=(this.minuteInt).toString;
 				this.minuteInt="";
-			}
+			},
+			sendHour()
+			{
+				this.hourProp = this.hourInt;
+			},
+			sendMinute()
+			{
+				this.minuteProp = this.minuteInt;
+			},
 		},
 		watch:
 		{

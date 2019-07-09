@@ -56,6 +56,7 @@
 			{
 				this.date=selectedDate;
 				this.hideCalendar();
+				console.log(this.date)
 			},
 			showCalendar ()
 			{
