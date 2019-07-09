@@ -231,7 +231,9 @@
 					<span class="calendar-day-effect"></span>
 				</div>
 			</div>
-			<timepicker :statut="statut" :value="value" :date.sync="date" name="hour-start" @change="changeHour()"></timepicker>
+			<timepicker-by-halfday :statut="statut" :value="value" :date.sync="date" name="hour-start" @change="changeHour" v-show="byHalfDay"></timepicker-by-halfday>
+			<timepicker-by-hour  :hour="hour_formatted" :statut="statut" :value="value" :date.sync="date" name="hour-start" @change="changeHour" v-show="byHour"></timepicker-by-hour>
+			<timepicker-by-minute :hour="hour_formatted" :minute="minute_formatted" :statut="statut" :value="value" :date.sync="date" name="hour-start" @change="changeHour" v-show="byMinute"></timepicker-by-minute>
 			<div class="calendar-actions">
 				<button @click="cancel" class="cancel">Annuler</button>
 				<button @click="submit">Choisir</button>
@@ -244,7 +246,10 @@
 <script>
 
 	import Month from '../modules/month.js';
-	import Timepicker from './Timepicker.vue';
+	import TimepickerByHalfDay from './TimepickerByHalfDay.vue';
+	import TimepickerByHour from './TimepickerByHour.vue';
+	import TimepickerByMinute from './TimepickerByMinute.vue';
+	import moment from 'moment';
 
 	//Functions
 	String.prototype.capitalize = function() 
@@ -257,21 +262,32 @@
 	{
 		components:
 		{
-			'timepicker': Timepicker,
+			'timepicker-by-halfday': TimepickerByHalfDay,
+			'timepicker-by-hour': TimepickerByHour,
+			'timepicker-by-minute': TimepickerByMinute,
 		},
 		props: 
 		{
 			date: {},
 			displayedCalendar: {type: Boolean, default: true},
 			value: { type: String, required: true },
-			statut: { type: String }
+			statut: { type: String },
 		},
 		data ()
 		{
 			return {
 				weekdays: ['L', 'M', 'M', 'J', 'V', 'S', 'D'],
 				month: new Month(this.date.month(), this.date.year()),
-				dateProp: this.date
+				dateProp: this.date,
+	    		timeProp: this.date,
+	    		byHalfDay: false,
+	    		byHour: false,
+	    		byMinute: false,
+	    		hourFocused: false,
+	    		minuteFocused: false,
+	    		hourProp: '',
+	    		minuteProp: '',
+	    		regex: /^[0-9]{2}$/
 			}
 		},
 		methods:
@@ -311,14 +327,48 @@
 			{
 				this.$emit('change', this.dateProp);
 			},
-			changeHour (value)
-			{
-				console.log('change')
-				console.log(value)
-			},
 			cancel ()
 			{
 				this.$emit('cancel')
+			},
+			changeHour: function (timeObj)
+			{
+				this.hourProp = timeObj.hourProp;
+				this.minuteProp = timeObj.minuteProp;
+				
+				this.dateProp.minute(this.minuteProp);
+				this.dateProp.hour(this.hourProp);
+			},
+
+			isHalfDay ()
+			{
+				if(this.statut === 'byHalfDay') 
+				{	
+					this.byHalfDay = true
+				} else
+				{
+					this.byMinute = false
+				}
+			},
+			isHour ()
+			{
+				if(this.statut === 'byHour') 
+				{	
+					this.byHour = true
+				}else
+				{
+					this.byMinute = false
+				}
+			},
+			isMinute ()
+			{
+				if(this.statut === 'byMinute') 
+				{	
+					this.byMinute = true
+				} else
+				{
+					this.byMinute = false
+				}
 			},
 		},
 		computed: 
@@ -332,9 +382,20 @@
 			{
 				return this.dateProp.format('ddd, D MMMM').capitalize();
 			},
+			hour_formatted ()
+			{
+				return this.dateProp.format('HH')
+			},
+			minute_formatted ()
+			{
+				return this.dateProp.format('mm')
+			},
 		},
 		mounted ()
 		{
+			this.isHalfDay();
+			this.isHour();
+			this.isMinute();
 		}
 	};
 </script>

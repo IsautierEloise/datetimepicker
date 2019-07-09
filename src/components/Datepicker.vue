@@ -8,8 +8,8 @@
 
 <template>	
 	<div class="calendar-wrap">
-		<input type="text" :value="date_formatted" @click="showCalendar">
-		<input type="hidden" :name="name" :value="date_raw">
+		<input type="text" v-model="date_formatted" @click="showCalendar" readonly>
+		<input type="hidden" :name="name" v-model="date_formatted" readonly>
 		<calendar :statut="statut" :value="date_raw" :dateProp="this.date" :displayedCalendar="visibleCalendar" :date.sync="date" @change="getDate" @cancel="hideCalendar" ></calendar>
 	</div>
 </template>
@@ -52,10 +52,10 @@
 		},
 		methods:
 		{
-			getDate: function (date)
+			getDate: function (selectedDate)
 			{
-				this.date=date;
-				this.hideCalendar()
+				this.date=selectedDate;
+				this.hideCalendar();
 			},
 			showCalendar ()
 			{
@@ -72,7 +72,7 @@
 		{
 			date_formatted () 
 			{
-				return this.date.format('YYYY-MM-DD HH:mm')
+				return this.date.format('YYYY-MM-DD HH:mm');
 			},
 			date_raw () 
 			{
