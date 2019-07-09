@@ -245,13 +245,6 @@
 				this.$emit('change', {'hourProp':this.hourProp, 'minuteProp':this.minuteProp} );
 			}
 		},
-		computed:
-		{
-			
-		},
-		mounted()
-		{
-		}
 	};
 
 </script>

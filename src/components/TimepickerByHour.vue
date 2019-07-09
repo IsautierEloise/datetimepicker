@@ -98,7 +98,7 @@
 	<div class="timepicker-wrap">
 		<div class="hour-timepicker timepicker" >
 			<div class="hour">		
-				<input type="text" name="hourInput" autocomplete="off" v-model="hour" @keyup="getInput" @focus="focusedHour">
+				<input type="text" name="hour-input" v-model="hourInt" @focus="focusedHour" @input="sendHour" autocomplete="off" >	
 				<div class="timepicker-controls">
 					<button class="timepicker-controls-add" @click="addHour">
 						<img src="../assets/caret-up.svg" alt="add" >
@@ -123,72 +123,58 @@
 		{
 			value: { type: String, required: true },
 			statut: { type: String },
+			hour: { type: String },
 		},
 		data()
 		{
 			return{		
-	    		hourProp: this.value,
-	    		hour: 5
+	    		hourProp: this.hour,
+	    		hourInt: parseInt(this.hour),
 			}
 		},
 		methods:
 		{
 			addHour()
 			{
-				this.hourProp=moment(this.hourProp).add(1,'hours').clone();
+				if(this.hourInt > 22)
+				{
+					this.hourInt = 0
+				} else
+				{
+					this.hourInt++;
+				};
+				this.hourProp = this.hourInt;
+				this.minuteProp = this.minuteInt;
 			},
 			subHour()
 			{
-				this.hourProp=moment(this.hourProp).subtract(1,'hours').clone();
+				if(this.hourInt < 1)
+				{
+					this.hourInt = 23
+				} else
+				{
+					this.hourInt--;
+				};
+				this.hourProp = this.hourInt;
+				this.minuteProp = this.minuteInt;
 			},
 			focusedHour()
 			{
-				this.hourFocused= true;
+				this.hourInt=(this.hourInt).toString;
+				this.hourInt="";
 			},
-			getInput()
+			sendHour()
 			{
-				console.log(this.hour_formatted);
-				let hourminuteInput = document.querySelector("input[name=hourminuteInput]").getAttribute('value');
-        		console.log(hourminuteInput)
-			}
+				this.hourProp = this.hourInt;
+			},
 		},
 		watch:
 		{
-			hourProp ()
+			hourInt ()
 			{
-				this.$emit('change', this.hourProp);
-			}
-		},
-		computed:
-		{
-			// hour_formatted ()
-			// {
-			// 	if (this.hourFocused)
-			// 	{
-			// 		""
-			// 		// const validInput = moment(this.hourminuteInput, 'HH').isValid()
-			// 		// if(validInput)
-			// 		// {
-			// 		// 	return moment(this.hourInput).format('HH')
-			// 		// } else
-			// 		// {
-			// 		// 	console.log('test-invalid')
-			// 		// }
-			// 	} else
-			// 	{
-			// 		return moment(this.hourProp).format('HH');
-			// 	}
-			// },
-			// minute_formatted ()
-			// {
-			// 	if (this.minuteFocused)
-			// 	{
-			// 		return ""
-			// 	} else
-			// 	{
-			// 		return moment(this.hourProp).format('mm').toString();	
-			// 	}
-			// }
+				this.$emit('change', {'hourProp':this.hourProp});
+
+			},
 		},
 	};
 

@@ -333,10 +333,14 @@
 				this.hourInt = parseInt(this.hourProp);
 				this.minuteInt = parseInt(this.minuteProp);
 
-				if((this.hourInt<24 && this.hourInt>0 ) && (this.minuteInt<59 && this.minuteInt>0))
+				if((this.hourInt<24 && this.hourInt>0 ) && (this.minuteInt<59 && this.minuteInt>0) && this.statut === 'byMinute')
 				{	
 					this.$emit('change', this.dateProp);
-				} else
+				} 
+				else if((this.hourInt<24 && this.hourInt>0 ) && this.statut === 'byHour')
+				{
+					this.$emit('change', this.dateProp);
+				}else
 				{
 					alert('Format invalide')
 				}
