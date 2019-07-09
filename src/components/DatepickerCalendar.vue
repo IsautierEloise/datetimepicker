@@ -163,11 +163,13 @@
 				background-color: $color-grey
 			}
 		}
-		:first-child
+		
+		.cancel
 		{
 			color: $color-grey-dark;
 		}
-		:last-child
+		
+		.sub
 		{
 			color: $color-blue;
 		}
@@ -180,7 +182,14 @@
 			opacity: 0;
 		}
 	}
-	.calendar-timepicker
+	.options
+	{
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: ceneter;
+	}
+	timepicker
 	{
 		position: relative;
 		border-top: 1px solid $color-blue-light;
@@ -191,7 +200,7 @@
 
 <template>
 	<transition name="slide">
-		<div class="calendar" v-show="displayed" @click.stop>
+		<div class="calendar" v-show="displayedCalendar" @click.stop>
 			<div class="calendar-header">
 				<div class="calendar-year">
 					{{year}}
@@ -202,7 +211,7 @@
 			</div>
 			<div class="calendar-controls">
 				<button class="calendar-controls-prev" @click="prevMonth()">
-					<img src="../assets/chevron-left.svg" alt="previous">
+					<img src="../assets/chevron-left.svg" alt="next">
 				</button>
 				<div class="calendar-controls-month">
 					{{month.getFormatted()}}
@@ -224,9 +233,12 @@
 					<span class="calendar-day-effect"></span>
 				</div>
 			</div>
+			<timepicker-by-halfday :statut="statut" :value="value" :date.sync="date" name="hour-start" @change="changeHour" v-show="byHalfDay"></timepicker-by-halfday>
+			<timepicker-by-hour  :hour="hour_formatted" :statut="statut" :value="value" :date.sync="date" name="hour-start" @change="changeHour" v-show="byHour"></timepicker-by-hour>
+			<timepicker-by-minute :hour="hour_formatted" :minute="minute_formatted" :statut="statut" :value="value" :date.sync="date" name="hour-start" @change="changeHour" v-show="byMinute"></timepicker-by-minute>
 			<div class="calendar-actions">
 				<button @click="cancel" class="cancel">Annuler</button>
-				<button @click="submit">Choisir</button>
+				<button class="sub" @click="submit">Choisir</button>
 			</div>
 		</div>
 	</transition>
@@ -236,6 +248,10 @@
 <script>
 
 	import Month from '../modules/month.js';
+	import TimepickerByHalfDay from './TimepickerByHalfDay.vue';
+	import TimepickerByHour from './TimepickerByHour.vue';
+	import TimepickerByMinute from './TimepickerByMinute.vue';
+	import moment from 'moment';
 
 	//Functions
 	String.prototype.capitalize = function() 
@@ -246,10 +262,18 @@
 	//Component
 	export default
 	{
+		components:
+		{
+			'timepicker-by-halfday': TimepickerByHalfDay,
+			'timepicker-by-hour': TimepickerByHour,
+			'timepicker-by-minute': TimepickerByMinute,
+		},
 		props: 
 		{
 			date: {},
-			displayed: {type: Boolean, default: true},
+			displayedCalendar: {type: Boolean, default: true},
+			value: { type: String, required: true },
+			statut: { type: String },
 		},
 		data ()
 		{
@@ -257,6 +281,18 @@
 				weekdays: ['L', 'M', 'M', 'J', 'V', 'S', 'D'],
 				month: new Month(this.date.month(), this.date.year()),
 				dateProp: this.date,
+	    		timeProp: this.date,
+	    		byHalfDay: false,
+	    		byHour: false,
+	    		byMinute: false,
+	    		hourFocused: false,
+	    		minuteFocused: false,
+	    		hourProp: '',
+	    		minuteProp: '',
+	    		hourInt: 0,
+	    		minuteInt: 0,
+	    		invalidDate: false,
+	    		regex: /^[0-9]$/
 			}
 		},
 		methods:
@@ -264,6 +300,7 @@
 			isSelected: function (day)
 			{
 				return this.dateProp.unix() === day.unix();
+			
 			},
 			selectDate: function (day)
 			{
@@ -293,12 +330,65 @@
 			},
 			submit ()
 			{
-				this.$emit('change', this.dateProp)
+				this.hourInt = parseInt(this.hourProp);
+				this.minuteInt = parseInt(this.minuteProp);
+
+				if((this.hourInt<24 && this.hourInt>0 ) && (this.minuteInt<59 && this.minuteInt>0) && this.statut === 'byMinute')
+				{	
+					this.$emit('change', this.dateProp);
+				} 
+				else if((this.hourInt<24 && this.hourInt>0 ) && this.statut === 'byHour')
+				{
+					this.$emit('change', this.dateProp);
+				}else
+				{
+					alert('Format invalide')
+				}
 			},
 			cancel ()
 			{
 				this.$emit('cancel')
-			}
+			},
+			changeHour: function (timeObj)
+			{
+				this.hourProp = timeObj.hourProp;
+				this.minuteProp = timeObj.minuteProp;
+				
+
+				this.dateProp.minute(this.minuteProp);
+				this.dateProp.hour(this.hourProp);
+			},
+
+			isHalfDay ()
+			{
+				if(this.statut === 'byHalfDay') 
+				{	
+					this.byHalfDay = true
+				} else
+				{
+					this.byMinute = false
+				}
+			},
+			isHour ()
+			{
+				if(this.statut === 'byHour') 
+				{	
+					this.byHour = true
+				}else
+				{
+					this.byMinute = false
+				}
+			},
+			isMinute ()
+			{
+				if(this.statut === 'byMinute') 
+				{	
+					this.byMinute = true
+				} else
+				{
+					this.byMinute = false
+				}
+			},
 		},
 		computed: 
 		{
@@ -311,10 +401,20 @@
 			{
 				return this.dateProp.format('ddd, D MMMM').capitalize();
 			},
+			hour_formatted ()
+			{
+				return this.dateProp.format('HH')
+			},
+			minute_formatted ()
+			{
+				return this.dateProp.format('mm')
+			},
 		},
 		mounted ()
 		{
-			console.log('displayed', this.displayed);
+			this.isHalfDay();
+			this.isHour();
+			this.isMinute();
 		}
 	};
 </script>

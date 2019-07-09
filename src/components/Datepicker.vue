@@ -8,11 +8,9 @@
 
 <template>	
 	<div class="calendar-wrap">
-		<input type="text" :value="date_formatted" @click="showCalendar">
-		<input type="hidden" :name="name" :value="date_raw">
-		<datepicker-calendar :displayed="isVisible" :date.sync="date" @change="getDate" @cancel="hideCalendar"></datepicker-calendar>
-		<input type="text" :value='hour_formatted'>
-		<timepicker-input :date.sync="date" name="hour-start"></timepicker-input>
+		<input type="text" v-model="date_formatted" @click="showCalendar" readonly>
+		<input type="hidden" :name="name" v-model="date_formatted" readonly>
+		<calendar :statut="statut" v-model="date_raw" :dateProp="this.date" :displayedCalendar="visibleCalendar" :date.sync="date" @change="getDate" @cancel="hideCalendar" ></calendar>
 	</div>
 </template>
 
@@ -21,48 +19,53 @@
 	import moment from 'moment';
 	moment.locale('fr');
 	import DatepickerCalendarComponent from './DatepickerCalendar.vue';
-	import TimepickerInput from './TimepickerInput.vue';
 
 	//Variables
-	const defaultFormat = 'YYYY-MM-DD';
+	const defaultFormat = 'YYYY-MM-DDTHH:mm';
 
 	//Component
 	export default
 	{
 		components: 
 		{
-			'datepicker-calendar': DatepickerCalendarComponent,
-			'timepicker-input': TimepickerInput,
+			'calendar': DatepickerCalendarComponent,
 		},
 		props: 
 		{
 			value: { type: String, required: true },
 			format: { type: String, default: defaultFormat },
 			name: { type: String },
+			statut: { 
+				byDay: Boolean,
+				byHalfDay: Boolean,
+				byHour: Boolean,
+				byMinute: Boolean,
+			 },
+			options: { type: String },
 		},
 		data () 
 		{
 			return {
-				isVisible: false,
+				visibleCalendar: false,
 				date: moment(this.value, defaultFormat),
-				hour: moment(this.date, 'HH:mm')
 			}
 		},
 		methods:
 		{
-			getDate: function (date)
+			getDate: function (selectedDate)
 			{
-				this.date=date;
-				this.hideCalendar()
+				this.date = selectedDate;
+				this.hideCalendar();
+				console.log(this.date)
 			},
 			showCalendar ()
 			{
-				this.isVisible=true;
+				this.visibleCalendar = true;
 				setTimeout(() => document.addEventListener('click', this.hideCalendar), 0)
 			},
 			hideCalendar ()
 			{
-				this.isVisible=false;
+				this.visibleCalendar = false;
 				document.removeEventListener('click', this.hideCalendar)
 			}
 		},
@@ -70,20 +73,15 @@
 		{
 			date_formatted () 
 			{
-				return this.date.format(this.format)
+				return this.date.format('YYYY-MM-DD HH:mm');
 			},
 			date_raw () 
 			{
 				return this.date.format(defaultFormat)
 			},
-			hour_formatted ()
-			{
-				return moment(this.value).format('HH:mm')
-			}
 		},
 		mounted()
 		{
-			console.log('test')
 		}
 	};
 </script>
