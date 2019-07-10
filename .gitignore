@@ -1,9 +1,12 @@
 .DS_Store
+Thumbs.db
+*~
 
-node_modules/
+
 build/
 config/
-src/router/
+node_modules/
+src/
 test/
 .babelrc
 .editorconfig
