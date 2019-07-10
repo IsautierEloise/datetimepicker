@@ -329,25 +329,32 @@
 			},
 			submit ()
 			{
-				this.hourInt = parseInt(this.hourProp);
-				this.minuteInt = parseInt(this.minuteProp);
-
-				if((this.hourInt<24 && this.hourInt>0 ) && (this.minuteInt<59 && this.minuteInt>0) && this.statut === 'byMinute')
+				if((this.hourInt<24 && this.hourInt>=0 ) && (this.minuteInt<59 && this.minuteInt>=0) && this.statut === 'byMinute')
 				{	
+					this.hourInt = parseInt(this.hourProp);
+					this.minuteInt = parseInt(this.minuteProp);
+					this.dateProp = this.date.clone();
 					this.$emit('change', this.dateProp);
 				} 
 				else if((this.hourInt<24 && this.hourInt>0 ) && this.statut === 'byHour')
 				{
+					this.hourInt = parseInt(this.hourProp);
+					this.minuteInt = parseInt(this.minuteProp);
+					this.dateProp = this.date.clone();
 					this.$emit('change', this.dateProp);
 				}else if(this.statut === 'byDay')
-				{
+				{	
+					this.hourInt = parseInt(this.hourProp);
+					this.minuteInt = parseInt(this.minuteProp);
+					this.dateProp = this.date.clone();
 					this.$emit('change', this.dateProp);
 				}else if(this.statut === 'byHalfDay')
 				{
+					this.dateProp = this.date.clone();
 					this.$emit('change', this.dateProp);
 				}else
 				{
-					alert('Format invalide')
+					alert('Format invalide');
 				}
 			},
 			cancel ()
@@ -419,7 +426,6 @@
 			this.isHalfDay();
 			this.isHour();
 			this.isMinute();
-			console.log(this.isSelected(this.date))
 		}
 	};
 </script>

@@ -9,7 +9,7 @@
 <template>	
 	<div class="calendar-wrap">
 		<input type="text" v-model="date_formatted" @click="showCalendar" @focus="" readonly>
-		<input type="hidden" :name="name" v-model="date_formatted" readonly>
+		<input type="hidden" :name="name"v-model="date_formatted" readonly>
 		<calendar :statut="statut" v-model="date_raw" :dateProp="this.date" :displayedCalendar="visibleCalendar" :date.sync="date" @change="getDate" @cancel="hideCalendar" ></calendar>
 	</div>
 </template>
@@ -55,7 +55,6 @@
 			getDate: function (selectedDate)
 			{
 				this.date = selectedDate;
-				console.log(this.date)
 				this.hideCalendar();
 			},
 			showCalendar ()
