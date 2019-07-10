@@ -9,13 +9,17 @@ export default class Month
 		this.lastDay = this.firstDay.clone().endOf('month')
 		this.month = month
 		this.year = year
-	}
+	};
 	getWeekBeginning()
 	{
 		return this.firstDay.weekday()
-	}
+	};
 	getMonthDays()
 	{
 		return moment.range(this.firstDay, this.lastDay).toArray('days')
+	};
+	getFormatted()
+	{
+		return this.month.toString( )
 	}
 }

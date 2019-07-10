@@ -2,7 +2,7 @@
   "name": "vue-datetime-picker-component",
   "version": "1.0.2",
   "description": "A Vue.js date and timepicker",
-  "author": "",
+  "author": "eloiseisautier",
   "private": false,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
