@@ -228,7 +228,7 @@
 			<div class="calendar-days">
 				<div class="calendar-day" :style="{ width: (month.getWeekBeginning()*3) + 'rem'}">
 				</div>
-				<div class="calendar-day" @click="selectDate(day)" v-for="day in month.getMonthDays()" :class="{selected: isSelected(day)}">
+				<div class="calendar-day" @click="selectDate(day)" v-for="day in month.getMonthDays()" :class="{'selected': isSelected(day)}">
 					<span class="calendar-day-text">{{day.format('D')}}</span>
 					<span class="calendar-day-effect"></span>
 				</div>
@@ -292,7 +292,7 @@
 	    		hourInt: 0,
 	    		minuteInt: 0,
 	    		invalidDate: false,
-	    		regex: /^[0-9]$/
+	    		regex: /^[0-9]$/,
 			}
 		},
 		methods:
@@ -300,7 +300,6 @@
 			isSelected: function (day)
 			{
 				return this.dateProp.unix() === day.unix();
-			
 			},
 			selectDate: function (day)
 			{
@@ -340,6 +339,12 @@
 				else if((this.hourInt<24 && this.hourInt>0 ) && this.statut === 'byHour')
 				{
 					this.$emit('change', this.dateProp);
+				}else if(this.statut === 'byDay')
+				{
+					this.$emit('change', this.dateProp);
+				}else if(this.statut === 'byHalfDay')
+				{
+					this.$emit('change', this.dateProp);
 				}else
 				{
 					alert('Format invalide')
@@ -347,13 +352,12 @@
 			},
 			cancel ()
 			{
-				this.$emit('cancel')
+				this.$emit('cancel');
 			},
 			changeHour: function (timeObj)
 			{
 				this.hourProp = timeObj.hourProp;
 				this.minuteProp = timeObj.minuteProp;
-				
 
 				this.dateProp.minute(this.minuteProp);
 				this.dateProp.hour(this.hourProp);
@@ -415,6 +419,7 @@
 			this.isHalfDay();
 			this.isHour();
 			this.isMinute();
+			console.log(this.isSelected(this.date))
 		}
 	};
 </script>
