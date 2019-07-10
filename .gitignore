@@ -11,3 +11,4 @@ test/
 .eslintignore
 .eslintrc.js
 .postcssrc.js
+package.json
