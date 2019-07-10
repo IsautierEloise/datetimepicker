@@ -6,7 +6,7 @@ Thumbs.db
 build/
 config/
 node_modules/
-src/
+src/router
 test/
 .babelrc
 .editorconfig
