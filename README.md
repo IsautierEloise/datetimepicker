@@ -4,7 +4,6 @@
 
 ## Build Setup
 ``` bash
-dependencies
 npm i vue-cli
 vue init webpack datetimepicker
 npm i
