@@ -20,6 +20,6 @@ export default class Month
 	};
 	getFormatted()
 	{
-		return this.month.toString( )
+		return this.firstDay.format('MMMM YYYY')
 	}
 }
