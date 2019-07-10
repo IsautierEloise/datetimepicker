@@ -4,12 +4,9 @@ node_modules/
 build/
 config/
 src/router/
-static/
 test/
 .babelrc
 .editorconfig
 .eslintignore
 .eslintrc.js
 .postcssrc.js
-package-lock.json
-package.json
